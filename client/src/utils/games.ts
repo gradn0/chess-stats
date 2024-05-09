@@ -1,5 +1,5 @@
-type Colour = "white" | "black";
-type Result = "win" | "lose" | "draw";
+export type Colour = "white" | "black";
+export type Result = "win" | "lose" | "draw";
 
 export interface Game {
   colour: Colour,
