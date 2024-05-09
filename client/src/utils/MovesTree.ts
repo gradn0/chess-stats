@@ -5,7 +5,7 @@ type Needle = Tree | string;
 
 export class Tree {
   #children = new Map();
-  #parent = null;
+  #parent: Tree | null = null;
   #id = uuidv4();
   #move;
   #record = {
@@ -38,7 +38,13 @@ export class Tree {
     return Array.from(this.#children.values());
   }
 
-  get parent () {
+  set parent(newParent: Tree | null) {
+    if (newParent !== this.parent) {
+      this.#parent = newParent; 
+    }
+  }
+
+  get parent() {
     return this.#parent;
   }
 
@@ -53,6 +59,7 @@ export class Tree {
   createChild(move: string) {
     const node = new Tree(move);
     this.#children.set(node.id, node);
+    node.parent = this;
     return node;
   }
 

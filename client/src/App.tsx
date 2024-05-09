@@ -7,6 +7,15 @@ const username = "";
 
 function App() {
   const [games, setgames] = useState<Game[] | null>(null);
+  const [tree, settree] = useState<Tree | null>(null);
+  const [current, setcurrent] = useState<Tree | null>(null);
+
+  const prev = () => {
+    if (!current || current?.move === "root") {
+      return;
+    }
+    setcurrent(current?.parent);
+  }
 
   useEffect(() => {
     const getPGNs = async () => {
@@ -23,15 +32,19 @@ function App() {
     }
 
     getPGNs();
-    if (!games) return;
-    const tree = new Tree("root");
+    settree(new Tree("root"));
+    if (!tree || !games) return;
     populateTree(games, tree);
+    setcurrent(tree);
     tree.print();
   }, [])
 
   return (
     <div className="">
-
+      <ul className="space-y-2">
+        {current?.children.map(child => (<li onClick={() => setcurrent(child)} key={child.id} className="cursor-pointer">{child.move}</li>))}
+      </ul>
+      <button onClick={() => prev()}>Back</button>
     </div>
   )
 }
