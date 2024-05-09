@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from 'uuid'
-import { Game } from './games';
+import { Game, Result } from './games';
 
 type Needle = Tree | string;
 
@@ -8,6 +8,7 @@ export class Tree {
   #parent: Tree | null = null;
   #id = uuidv4();
   #move;
+  #gamesPlayed = 0;
   #record = {
     losses: 0,
     wins: 0,
@@ -28,6 +29,14 @@ export class Tree {
 
   set record(record) {
     this.#record = record;
+  }
+
+  set gamesPlayed(gamesPlayed: number) {
+    this.#gamesPlayed = gamesPlayed;
+  }
+
+  get gamesPlayed() {
+    return this.#gamesPlayed;
   }
 
   get id() {
@@ -99,10 +108,19 @@ export class Tree {
     }
   }
 
+  updateRecord(result: Result) {
+    this.#gamesPlayed++;
+    switch(result) {
+      case "win": this.#record.wins += 1; break;
+      case "draw": this.#record.draws += 1; break;
+      case "lose": this.#record.losses += 1; break;
+    }
+  }
+
   #getTreeString = (node: Tree, spaceCount = 0) => {
     let str = "\n";
     node.children.forEach(child => {
-      str += `${" ".repeat(spaceCount)}${child.move}${this.#getTreeString(child, spaceCount + 2)}`
+      str += `${" ".repeat(spaceCount)}${child.move}${this.#gamesPlayed}${this.#getTreeString(child, spaceCount + 2)}`
     })
     return str;
   }
@@ -114,14 +132,18 @@ export class Tree {
 
 export const populateTree = (games: Game[], root: Tree) => {
   games.forEach(game => {
+    const result = game.result;
+
     const insert = (node: Tree, i: number) => {
       if (i === 20) return;
       const move = game.moves[i];
       const existingNode = node.getChild(move);
       if (!existingNode) {
         const newNode = node.createChild(move);
+        newNode.updateRecord(result);
         insert(newNode, i+=1);
       } else {
+        existingNode.updateRecord(result);
         insert(existingNode, i+=1);
       }
     }

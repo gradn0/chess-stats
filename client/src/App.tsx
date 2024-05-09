@@ -7,9 +7,10 @@ const username = "";
 
 function App() {
   const [games, setgames] = useState<Game[] | null>(null);
-  const [tree, settree] = useState<Tree | null>(null);
   const [current, setcurrent] = useState<Tree | null>(null);
   const [colour, setcolour] = useState<Colour>("white");
+  const [whiteTree, setwhiteTree] = useState<Tree | null>();
+  const [blackTree, setblackTree] = useState<Tree | null>();
 
   const prev = () => {
     if (!current || current?.move === "root") {
@@ -18,19 +19,34 @@ function App() {
     setcurrent(current?.parent);
   }
 
-  useEffect(() => {
-    const tree = new Tree("root");
-    if (!tree || !games) return;
+  const toggleColour = (colour: Colour) => {
+    if (!blackTree || !whiteTree) return;
+    if (colour === "white") {
+      setcurrent(whiteTree);
+    } else {
+      setcurrent(blackTree);
+    }
+    setcolour(colour);
+  }
+
+  const genTrees = () => {
+    const whiteTree = new Tree("root");
+    const blackTree = new Tree("root");
+    if (!whiteTree || !blackTree || !games) return;
     
-    const newGames = games.filter(game => game.colour === colour);
-    populateTree(newGames, tree);
+    const whiteGames = games.filter(game => game.colour === "white");
+    const blackGames = games.filter(game => game.colour === "black");
 
-    settree(tree);
-    setgames(newGames);
-    setcurrent(tree);
-  }, [colour])
+    populateTree(whiteGames, whiteTree);
+    populateTree(blackGames, blackTree);
+
+    setwhiteTree(whiteTree);
+    setblackTree(blackTree)
+    setcurrent(whiteTree);
+  }
 
   useEffect(() => {
+    // data fetching
     const fetchGames = async () => {
       let rawData = localStorage.getItem("data");
       let data: any[];
@@ -44,16 +60,26 @@ function App() {
       setgames(parsePGNs(pgns, username));
     }
     fetchGames();
+    genTrees();
   }, [])
 
   return (
     <div className="">
-      <select value={colour} onChange={(e) => setcolour(e.target.value as Colour)}>
+      <select value={colour} onChange={(e) => toggleColour(e.target.value as Colour)}>
         <option value="white">White</option>
         <option value="black">Black</option>
       </select>
       <ul className="space-y-2">
-        {current?.children.map(child => (<li onClick={() => setcurrent(child)} key={child.id} className="cursor-pointer">{child.move}</li>))}
+        {current?.children.map(child => 
+          <li 
+            onClick={() => setcurrent(child)} 
+            key={child.id} 
+            className="cursor-pointer">
+              {child.move}
+              {child.gamesPlayed} 
+              {Math.floor(child.record.wins / child.gamesPlayed * 100)}%
+          </li>
+        )}
       </ul>
       <button onClick={() => prev()}>Back</button>
     </div>
