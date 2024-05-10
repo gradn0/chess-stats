@@ -35,9 +35,9 @@ function App() {
     if (!whiteTree || !blackTree || !games) return;
     
     const whiteGames = games.filter(game => game.colour === "white");
-    const blackGames = games.filter(game => game.colour === "black");
-
     populateTree(whiteGames, whiteTree);
+
+    const blackGames = games.filter(game => game.colour === "black");
     populateTree(blackGames, blackTree);
 
     setwhiteTree(whiteTree);
@@ -46,16 +46,17 @@ function App() {
   }
 
   useEffect(() => {
-    // data fetching
     const fetchGames = async () => {
       let rawData = localStorage.getItem("data");
       let data: any[];
       if (rawData) {
         data = JSON.parse(rawData);
       } else {
-        data = await fetchFromAPI(`${username}/games/2024/05`);
-        localStorage.setItem("data", JSON.stringify(data));
+        const apiData = await fetchFromAPI(`${username}/games/2024/05`);
+        localStorage.setItem("data", JSON.stringify(apiData.games));
+        data = apiData.games;
       }
+      
       const pgns: string[] = data.map(item => item.pgn);
       setgames(parsePGNs(pgns, username));
     }
