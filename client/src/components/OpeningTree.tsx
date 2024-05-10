@@ -45,6 +45,7 @@ const OpeningTree = () => {
     setblackTree(blackTree)
     setcurrent(whiteTree);
   }
+  
 
   useEffect(() => {
     const fetchGames = async () => {

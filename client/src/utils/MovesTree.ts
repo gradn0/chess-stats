@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from 'uuid'
-import { Game, Result } from './games';
+import { Game, Winner } from './games';
 
 type Needle = Tree | string;
 
@@ -9,10 +9,10 @@ export class Tree {
   #id = uuidv4();
   #move;
   #gamesPlayed = 0;
-  #record = {
-    losses: 0,
-    wins: 0,
-    draws: 0,
+  #winners = {
+    white: 0,
+    black: 0,
+    none: 0,
   };
 
   constructor(move: string) {
@@ -27,8 +27,8 @@ export class Tree {
     this.#move = move;
   }
 
-  set record(record) {
-    this.#record = record;
+  set winners(winners) {
+    this.#winners = winners;
   }
 
   set gamesPlayed(gamesPlayed: number) {
@@ -61,8 +61,8 @@ export class Tree {
     return this.#children.size;
   }
   
-  get record() {
-    return this.#record;
+  get winners() {
+    return this.#winners;
   }
 
   createChild(move: string) {
@@ -108,12 +108,12 @@ export class Tree {
     }
   }
 
-  updateRecord(result: Result) {
+  updateRecord(result: Winner) {
     this.#gamesPlayed++;
     switch(result) {
-      case "win": this.#record.wins += 1; break;
-      case "draw": this.#record.draws += 1; break;
-      case "lose": this.#record.losses += 1; break;
+      case "white": this.#winners.white += 1; break;
+      case "black": this.#winners.black += 1; break;
+      case "none": this.#winners.none += 1; break;
     }
   }
 
@@ -132,7 +132,7 @@ export class Tree {
 
 export const populateTree = (games: Game[], root: Tree) => {
   games.forEach(game => {
-    const result = game.result;
+    const winner = game.winner;
 
     const insert = (node: Tree, i: number) => {
       if (i === 20) return;
@@ -140,10 +140,10 @@ export const populateTree = (games: Game[], root: Tree) => {
       const existingNode = node.getChild(move);
       if (!existingNode) {
         const newNode = node.createChild(move);
-        newNode.updateRecord(result);
+        newNode.updateRecord(winner);
         insert(newNode, i+=1);
       } else {
-        existingNode.updateRecord(result);
+        existingNode.updateRecord(winner);
         insert(existingNode, i+=1);
       }
     }

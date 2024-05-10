@@ -1,10 +1,10 @@
 export type Colour = "white" | "black";
-export type Result = "win" | "lose" | "draw";
+export type Winner = "white" | "black" | "none";
 
 export interface Game {
   colour: Colour,
   moves: string[],
-  result: Result,
+  winner: Winner,
 }
 
 export const parsePGNs = (pgns: string[], username:string) => {
@@ -14,13 +14,13 @@ export const parsePGNs = (pgns: string[], username:string) => {
     const colour = (pgn.split("\n")[4] === `[White \"${username}\"]`) ? "white" : "black";
 
     const resultPGN = pgn.split("\n")[6];
-    let result;
-    if ((colour === "white" && resultPGN === "[Result \"1-0\"]") || (colour === "black" && resultPGN === "[Result \"0-1\"]")) {
-      result = "win";
+    let winner;
+    if ((resultPGN === "[Result \"1-0\"]")) {
+      winner = "white";
     } else if (resultPGN === "[Result \"1/2-1/2\"]") {
-      result = "draw";
+      winner = "none"
     } else {
-      result = "lose";
+      winner = "black"
     }
 
     const moves = pgn.split('\n')[22].split(/{\[%clk\s[0-9]:[0-5][0-9]:[0-5][0-9]\.?[0-5]?[0-9]?\]}/);
@@ -28,7 +28,7 @@ export const parsePGNs = (pgns: string[], username:string) => {
 
     parsedGames.push({
       colour: colour,
-      result: result,
+      winner: winner,
       moves: moves,
     })
   });
