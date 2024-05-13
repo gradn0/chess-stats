@@ -22,15 +22,16 @@ export const parsePGNs = (pgns: string[], username:string) => {
     } else {
       winner = "black"
     }
-
     const moves = pgn.split('\n')[22].split(/{\[%clk\s[0-9]:[0-5][0-9]:[0-5][0-9]\.?[0-5]?[0-9]?\]}/);
-    moves.length = 20;
+    if (moves.length > 1) {
+      moves.length = 20;
 
-    parsedGames.push({
-      colour: colour,
-      winner: winner,
-      moves: moves,
-    })
+      parsedGames.push({
+        colour: colour,
+        winner: winner,
+        moves: moves,
+      })
+    }
   });
 
   return parsedGames;

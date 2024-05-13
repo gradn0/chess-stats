@@ -1,8 +1,6 @@
 import StatCard from "./StatCard"
 
 const StatsGrid = ({stats}: {stats: any}) => {
-  console.log(stats);
-  
   return (
     <div className="grid gap-[1em] auto-rows-auto sm:grid-cols-2 lg:grid-cols-3">
       {stats.chess_daily && <StatCard stat={stats.chess_daily} name="Daily"/>}

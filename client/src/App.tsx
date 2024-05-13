@@ -3,7 +3,7 @@ import Dashboard from "./components/Dashboard"
 import Header from "./components/Header"
 
 function App() {
-  const [username, setusername] = useState<string | null>("");
+  const [username, setusername] = useState<string | null>(null);
   const [text, settext] = useState("");
   const handleSubmit = () => {
     setusername(text);
