@@ -9,8 +9,8 @@ function App() {
     setusername(text);
   }
   return (
-    <div className="flex flex-col">
-      <div className="w-full">
+    <div>
+      <div>
         <Header />
       </div>
       

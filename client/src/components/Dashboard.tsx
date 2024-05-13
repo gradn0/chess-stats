@@ -1,35 +1,33 @@
 import { useState, useEffect } from "react";
-import fetchFromAPI from "../utils/fetchFromAPI"
+import { getData } from "../utils/fetchFromAPI"
 import { parsePGNs, Game } from "../utils/games"
 import OpeningExplorer from "./OpeningExplorer"
+import StatsGrid from "./StatsGrid";
 
 const Dashboard = ({username}: {username: string}) => {
   const [games, setgames] = useState<Game[] | null>(null);
+  const [stats, setstats] = useState();
+
+  const fetchData = async () => {
+    const {games, stats} = await getData(username);
+    const pgns: string[] = games.map((item: any) => item.pgn);
+    setgames(parsePGNs(pgns, username));
+    setstats(stats);
+  }
 
   useEffect(() => {
-    const fetchGames = async () => {
-      let rawData = localStorage.getItem(username);
-      let data: any[];
-      if (rawData) {
-        data = JSON.parse(rawData);
-      } else {
-        const apiData = await fetchFromAPI(`${username}/games/2024/05`);
-        localStorage.setItem(username, JSON.stringify(apiData.games));
-        data = apiData.games;
-      }
-      
-      const pgns: string[] = data.map(item => item.pgn);
-      setgames(parsePGNs(pgns, username));
-    }
-    fetchGames();
+    fetchData();
   }, [username])
   
   return (
     <div className="bg-darkGrey size-full p-[1em]">
-      <div className="bg-grey p-[1em] mx-auto w-[min(100%,25em)] sm:w-[40em] lg:w-[60em] rounded-lg">
-        {games && <OpeningExplorer games={games}/>}
+      <div className="mx-auto w-[min(100%,25em)] sm:w-[min(100%,40em)] lg:w-[60em] space-y-[1em]">
+        <h3 className="text-lg"><span className="font-semibold">{username}</span></h3>
+        <div className="bg-grey p-[1em] rounded-lg">
+          {games && <OpeningExplorer games={games}/>}
+        </div>
+        {stats && <StatsGrid stats={stats}/>}
       </div>
-      
     </div>
   )
 }
