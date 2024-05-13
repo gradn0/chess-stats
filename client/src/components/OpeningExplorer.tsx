@@ -6,7 +6,7 @@ import MoveCard from "./MoveCard";
 
 const username = "";
 
-const OpeningTree = () => {
+const OpeningExplorer = () => {
   const [games, setgames] = useState<Game[] | null>(null);
   const [current, setcurrent] = useState<Tree | null>(null);
   const [colour, setcolour] = useState<Colour>("white");
@@ -46,7 +46,6 @@ const OpeningTree = () => {
     setcurrent(whiteTree);
   }
   
-
   useEffect(() => {
     const fetchGames = async () => {
       let rawData = localStorage.getItem("data");
@@ -55,6 +54,8 @@ const OpeningTree = () => {
         data = JSON.parse(rawData);
       } else {
         const apiData = await fetchFromAPI(`${username}/games/2024/05`);
+        console.log("fetching");
+        
         localStorage.setItem("data", JSON.stringify(apiData.games));
         data = apiData.games;
       }
@@ -63,16 +64,22 @@ const OpeningTree = () => {
       setgames(parsePGNs(pgns, username));
     }
     fetchGames();
-    genTrees();
   }, [])
 
+  useEffect(() => {
+    genTrees();
+  }, [games])
+
   return (
-    <div className="space-y-4">
-      <select className="p-2" value={colour} onChange={(e) => toggleColour(e.target.value as Colour)}>
-        <option value="white">White</option>
-        <option value="black">Black</option>
-      </select>
-      <ul className="space-y-2 border-neutral-700 border-[1px] rounded-lg p-3 h-[20em] overflow-y-auto">
+    <div className="space-y-6 text-body">
+      <div className="flex">
+        <h2 className="text-heading font-semibold">Opening Explorer</h2>
+        <select className="p-2 ml-auto bg-darkGrey rounded-[8px] border-none" value={colour} onChange={(e) => toggleColour(e.target.value as Colour)}>
+          <option value="white">White</option>
+          <option value="black">Black</option>
+        </select>
+      </div>
+      <ul className="space-y-2 lg:space-y-3 h-[25em] overflow-y-auto">
         {current?.children.map((child: Tree) => 
           <MoveCard key={child.id} treeNode={child} handleNext={() => setcurrent(child)}/>
         )}
@@ -82,4 +89,4 @@ const OpeningTree = () => {
   )
 }
 
-export default OpeningTree
+export default OpeningExplorer
