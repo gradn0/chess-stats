@@ -5,8 +5,8 @@ Chess stats pulls user data from the Chess.com api and allows them to traverse t
 # Installation
 
 ```
-git clone https://github.com/gradn0/chess-analyser.git
-cd chess-analyser/client
+git clone https://github.com/gradn0/chess-stats.git
+cd chess-stats/client
 npm install
 npm run dev
 ```
