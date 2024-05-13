@@ -1,6 +1,6 @@
-# Chess Tracker
+# Chess Stats
 
-Chess tracker pulls user data from the Chess.com api and allows them to traverse their opening tree and track their winrates.
+Chess stats pulls user data from the Chess.com api and allows them to traverse their opening tree and track their winrates.
 
 # Installation
 
