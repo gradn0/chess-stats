@@ -14,10 +14,10 @@ function App() {
         <Header />
       </div>
       
-      <div className="bg-lightGrey w-screen h-screen flex justify-center items-center">
+      <div className="bg-lightGrey w-screen flex justify-center items-center">
         {
           username
-          ? <Dashboard username={username}/>
+          ? <Dashboard username={username} newUser={() => setusername(null)}/>
           : <div className="bg-darkGrey size-full p-[1em] flex justify-center">
               <input 
                 value={text}

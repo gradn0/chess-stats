@@ -35,11 +35,8 @@ ul {
 }
 
 body {
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
   overflow-x: hidden;
+  background-color: #18181b;
 }
 
 h1 {

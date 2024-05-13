@@ -4,7 +4,7 @@ import { parsePGNs, Game } from "../utils/games"
 import OpeningExplorer from "./OpeningExplorer"
 import StatsGrid from "./StatsGrid";
 
-const Dashboard = ({username}: {username: string}) => {
+const Dashboard = ({username, newUser}: {username: string, newUser: () => void}) => {
   const [games, setgames] = useState<Game[] | null>(null);
   const [stats, setstats] = useState();
 
@@ -22,7 +22,10 @@ const Dashboard = ({username}: {username: string}) => {
   return (
     <div className="bg-darkGrey size-full p-[1em]">
       <div className="mx-auto w-[min(100%,25em)] sm:w-[min(100%,40em)] lg:w-[60em] space-y-[1em]">
-        <h3 className="text-lg"><span className="font-semibold">{username}</span></h3>
+        <h3 className="text-lg">
+          <span className="font-semibold text-md lg:text-lg">{username}</span>
+          <span onClick={newUser} className="cursor-pointer text-sm lg:text-base"> (Switch)</span>
+        </h3>
         <div className="bg-grey p-[1em] rounded-lg">
           {games && <OpeningExplorer games={games}/>}
         </div>
