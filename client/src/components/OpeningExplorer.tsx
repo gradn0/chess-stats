@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react"
-import fetchFromAPI from "../utils/fetchFromAPI";
-import { Colour, Game, parsePGNs } from "../utils/games";
+import { Colour, Game } from "../utils/games";
 import { Tree, populateTree } from "../utils/MovesTree";
 import MoveCard from "./MoveCard";
 
-const username = "";
-
-const OpeningExplorer = () => {
-  const [games, setgames] = useState<Game[] | null>(null);
+const OpeningExplorer = ({games} : {games: Game[]}) => {
   const [current, setcurrent] = useState<Tree | null>(null);
   const [colour, setcolour] = useState<Colour>("white");
   const [whiteTree, setwhiteTree] = useState<Tree | null>();
@@ -46,26 +42,6 @@ const OpeningExplorer = () => {
     setcurrent(whiteTree);
   }
   
-  useEffect(() => {
-    const fetchGames = async () => {
-      let rawData = localStorage.getItem("data");
-      let data: any[];
-      if (rawData) {
-        data = JSON.parse(rawData);
-      } else {
-        const apiData = await fetchFromAPI(`${username}/games/2024/05`);
-        console.log("fetching");
-        
-        localStorage.setItem("data", JSON.stringify(apiData.games));
-        data = apiData.games;
-      }
-      
-      const pgns: string[] = data.map(item => item.pgn);
-      setgames(parsePGNs(pgns, username));
-    }
-    fetchGames();
-  }, [])
-
   useEffect(() => {
     genTrees();
   }, [games])

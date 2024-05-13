@@ -60,6 +60,10 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+input:focus {
+  outline: none;
+}
+
 .text-body {
   @apply text-xs lg:text-sm;
 }
