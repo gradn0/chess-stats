@@ -1,8 +1,3 @@
-interface data {
-  games: any[],
-  stats: any
-}
-
 const fetchFromAPI = async (query: string) => {
   const res = await fetch(`https://api.chess.com/pub/player/${query}`);
   const json = await res.json();
