@@ -18,14 +18,15 @@ function App() {
         {
           username
           ? <Dashboard username={username} newUser={() => setusername(null)}/>
-          : <div className="bg-darkGrey size-full p-[1em] flex justify-center">
+          : <div className="bg-darkGrey size-full p-[1em] flex justify-center pt-[5em] items-center gap-2">
               <input 
                 value={text}
                 onChange={(e) => settext(e.target.value)}
                 onKeyDown={(e) => {if(e.code === "Enter") handleSubmit()}} 
                 type="text" 
-                className="bg-lightGrey p-2 h-[3em] w-[15em] md:w-[20em] mt-[5em]" 
+                className="bg-lightGrey p-2 h-[3em] w-[15em] md:w-[20em]" 
                 placeholder="Username"/>
+                <button className="" onClick={handleSubmit}>Go</button>
             </div>
         }
         
